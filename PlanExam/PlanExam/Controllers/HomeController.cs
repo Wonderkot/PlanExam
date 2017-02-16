@@ -19,14 +19,12 @@ namespace PlanExam.Controllers
         public ActionResult Upload(HttpPostedFileBase upload)
         {
             if (upload == null) return RedirectToAction("Index");
-            // получаем имя файла
             string fileName = System.IO.Path.GetFileName(upload.FileName);
             if (!HttpPostedFileBaseExtensions.IsImage(upload))
             {
 
                 return View("Index");
             }
-            // сохраняем файл в папку Files в проекте
             Logger.Info("Выполняется сохранение файла {0} на сервере ...", upload.FileName);
             try
             {
@@ -38,7 +36,7 @@ namespace PlanExam.Controllers
                 return View("Index");
             }
             Logger.Info("Файл успешно сохранен.");
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "ViewPlan");
         }
     }
 }
