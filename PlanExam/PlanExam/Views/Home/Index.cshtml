@@ -1,0 +1,12 @@
+﻿@model dynamic
+
+<head>
+    Загрузка документа
+</head>
+<h3>Выберите файл для загрузки</h3>
+@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <span>Максимальный размер файла - 16 МБ</span><br />
+    <input type="file" name="upload" /><br>
+    <input type="submit" value="Загрузить" />
+}
