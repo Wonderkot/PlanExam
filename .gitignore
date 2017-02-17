@@ -251,5 +251,5 @@ paket-files/
 .idea/
 *.sln.iml
 
-Files/*.*
-*.log
+Files/
+*.txt

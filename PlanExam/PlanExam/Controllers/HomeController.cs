@@ -1,13 +1,17 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using NLog;
+using PlanExam.Models;
 using PlanExam.Utils;
 
 namespace PlanExam.Controllers
 {
     public class HomeController : Controller
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         // GET: Home
         public ActionResult Index()
@@ -19,16 +23,17 @@ namespace PlanExam.Controllers
         public ActionResult Upload(HttpPostedFileBase upload)
         {
             if (upload == null) return RedirectToAction("Index");
-            string fileName = System.IO.Path.GetFileName(upload.FileName);
+            string fileName = Path.GetFileName(upload.FileName);
             if (!HttpPostedFileBaseExtensions.IsImage(upload))
             {
 
                 return View("Index");
             }
             Logger.Info("Выполняется сохранение файла {0} на сервере ...", upload.FileName);
+            var saveFile = Path.Combine(Server.MapPath("~/Files/"), fileName);
             try
             {
-                upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                upload.SaveAs(saveFile);
             }
             catch (Exception e)
             {
@@ -36,7 +41,8 @@ namespace PlanExam.Controllers
                 return View("Index");
             }
             Logger.Info("Файл успешно сохранен.");
-            return RedirectToAction("Index", "ViewPlan");
+            Plan plan = new Plan(fileName);
+            return View("Exam", plan);
         }
     }
 }

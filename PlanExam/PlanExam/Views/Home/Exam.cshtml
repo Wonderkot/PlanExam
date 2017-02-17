@@ -1,0 +1,18 @@
+﻿@model  PlanExam.Models.Plan
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Exam</title>
+</head>
+<body>
+    <div>
+        <img src="@Url.Content(string.Concat("~/Files/", @Model.Picture))" alt="Image"/>
+    </div>
+</body>
+</html>
