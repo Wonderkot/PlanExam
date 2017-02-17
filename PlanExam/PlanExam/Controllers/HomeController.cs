@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using NLog;
 using PlanExam.Abstract;
+using PlanExam.Implementation;
 using PlanExam.Models;
 using PlanExam.Utils;
 
@@ -12,7 +13,7 @@ namespace PlanExam.Controllers
     public class HomeController : Controller
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private IScaler _scaler;
+        private static IScaler _scaler;
 
         // GET: Home
         public ActionResult Index()
@@ -25,6 +26,7 @@ namespace PlanExam.Controllers
         {
             if (upload == null) return View("Index");
             string fileName = Path.GetFileName(upload.FileName);
+            
             if (!HttpPostedFileBaseExtensions.IsImage(upload))
             {
 
@@ -35,6 +37,7 @@ namespace PlanExam.Controllers
             try
             {
                 upload.SaveAs(saveFile);
+                _scaler = new ImageScaler(saveFile);
             }
             catch (Exception e)
             {
@@ -48,9 +51,10 @@ namespace PlanExam.Controllers
 
         public string ZoomIn(int step)
         {
-            //return _scaler.ZoomIn(step);
-            var content = Url.Content(string.Concat("~/Files/", "1.png"));
-            return content;
+            if (_scaler != null) return _scaler.ZoomIn(step);
+            return null;
+            //var content = Url.Content(string.Concat("~/Files/", "1.png"));
+            //return content;
         }
     }
 }
