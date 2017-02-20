@@ -1,12 +1,25 @@
 ﻿@model dynamic
-
-<title>
-    Загрузка документа
-</title>
-<h3>Выберите файл для загрузки</h3>
-@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <span>Максимальный размер файла - 16 МБ</span><br />
-    <input type="file" name="upload" /><br>
-    <input type="submit" value="Загрузить" />
-}
+<html>
+<head>
+    <script src="/Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="/Scripts/utils.js" type="text/javascript"></script>
+    <title>
+        Загрузка документа
+    </title>
+</head>
+<body onload="getClientScreenSize()">
+    <h3>Выберите файл для загрузки</h3>
+    <input type="hidden" value=""
+           name="clientScreenHeight" id="clientScreenHeight" />
+    <input type="hidden" value=""
+           name="clientScreenWidth" id="clientScreenWidth" />
+    @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <span>Максимальный размер файла - 16 МБ</span>
+        <br />
+        <input type="file" name="upload" />
+        <br>
+        <input type="submit" value="Загрузить" />
+    }
+</body>
+</html>

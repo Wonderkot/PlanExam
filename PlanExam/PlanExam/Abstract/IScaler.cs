@@ -8,13 +8,8 @@ namespace PlanExam.Abstract
         /// </summary>
         /// <param name="step"></param>
         /// <returns></returns>
-        string ZoomIn(int step);
+        string GetScaledImage(int step);
 
-        /// <summary>
-        /// Уменьшение
-        /// </summary>
-        /// <param name="step"></param>
-        /// <returns></returns>
-        string ZoomOut(int step);
+        string GetStartImage();
     }
 }

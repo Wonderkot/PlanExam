@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using ImageResizer;
+using NLog;
 using PlanExam.Abstract;
 using PlanExam.Models;
 
@@ -12,71 +12,116 @@ namespace PlanExam.Implementation
 {
     public class ImageScaler : IScaler
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly Dictionary<int, Plan> _images = new Dictionary<int, Plan>();
-        private readonly string _file;
+        private readonly string _sourceFile;
 
-        public ImageScaler(string file)
+        public ImageScaler(string file, int clientWidth)
         {
-            _file = file;
-            Image image = Image.FromFile(_file);
-            Width = image.Width;
-            Height = image.Height;
-            Plan plan = new Plan(file);
-            plan.Width = Width;
-            plan.Height = Height;
+            Image image = Image.FromFile(file);
+            var width = image.Width;
+            var height = image.Height;
             image.Dispose();
+            //возьмем фиксированный шаг в 5%
+            DeltaX = (int)(width * 0.05);
+            DeltaY = (int)(height * 0.05);
+            Logger.Info("**** Изображение будет меняться на {0} по оси X и на {1} по оси Y. ****", DeltaX, DeltaY);
+
+            //сконвертируем изображение под ширину экрана если нужно
+            if (width < clientWidth)
+            {
+                while (width <= clientWidth)
+                {
+                    width += DeltaX;
+                    height += DeltaY;
+                }
+                //обычно забирает немного больше, поэтому отнимем обратно
+                width -= DeltaX;
+                height -= DeltaY;
+
+                ResizeSettings resizeSettings = new ResizeSettings(width, height, FitMode.Stretch,
+                    Path.GetExtension(file))
+                { Scale = ScaleMode.Both };
+
+                string directory = Path.GetDirectoryName(file);
+
+                var newFile = Path.Combine(directory, "Temp", Path.GetFileName(file));
+                Logger.Info("Исходный файл был преобразован для отображения по ширине экрана клиента.");
+                _sourceFile = newFile;
+                ImageBuilder.Current.Build(file, newFile, resizeSettings);
+            }
+            else
+            {
+                string directory = Path.GetDirectoryName(file);
+                _sourceFile = Path.Combine(directory, "Temp", Path.GetFileName(file));
+                File.Copy(file, _sourceFile);
+            }
+            try
+            {
+                File.Delete(file);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+            Plan plan = new Plan(_sourceFile)
+            {
+                Width = width,
+                Height = height
+            };
+
             _images.Add(0, plan);
         }
 
-        public string ZoomIn(int step)
+        public string GetScaledImage(int step)
         {
             if (_images.ContainsKey(step))
             {
                 return _images[step].Picture;
             }
             IOrderedEnumerable<KeyValuePair<int, Plan>> temp = _images.OrderByDescending(x => x.Key);
-            Plan container = null;
-            if (step > 0)
-            {
-                container = temp.First().Value;
-            }
-            else
-            {
-                container = temp.Last().Value;
-            }
 
-            var directory = Path.GetDirectoryName(_file);
-            var newFile = string.Concat(directory, Path.DirectorySeparatorChar, Path.GetFileNameWithoutExtension(_file), step.ToString(), Path.GetExtension(_file));
-            var width = container.Width + step;
-            var height = container.Height + step;
+            //в зависимости от направления отдаём нужную картинку
+            var container = step > 0 ? temp.First().Value : temp.Last().Value;
+
+            string directory = Path.GetDirectoryName(_sourceFile);
+            var newFile = string.Concat(directory, Path.DirectorySeparatorChar, Path.GetFileNameWithoutExtension(_sourceFile), step.ToString(), Path.GetExtension(_sourceFile));
+
+            var width = step > 0 ? container.Width + DeltaX : container.Width - DeltaX;
+            var height = step > 0 ? container.Height + DeltaY : container.Height - DeltaY;
+
             try
             {
-                ResizeSettings resizeSettings = new ResizeSettings(width, height, FitMode.Crop, Path.GetExtension(_file));
-                ImageBuilder.Current.Build(_file, newFile, resizeSettings);
+                ResizeSettings resizeSettings = new ResizeSettings(width, height, FitMode.Stretch, Path.GetExtension(_sourceFile));
+                resizeSettings.Scale = ScaleMode.Both;
+                ImageBuilder.Current.Build(_sourceFile, newFile, resizeSettings);
                 if (File.Exists(newFile))
                 {
-                    string folderName = new DirectoryInfo(Path.GetDirectoryName(_file)).Name;
-                    newFile = string.Concat(Path.DirectorySeparatorChar, folderName, Path.DirectorySeparatorChar, Path.GetFileName(newFile));
-                    Plan newPlan = new Plan(newFile);
-                    newPlan.Width = width;
-                    newPlan.Height = height;
+                    newFile = string.Concat(Path.DirectorySeparatorChar, "Files", Path.DirectorySeparatorChar, "Temp", Path.DirectorySeparatorChar, Path.GetFileName(newFile));
+                    Plan newPlan = new Plan(newFile)
+                    {
+                        Width = width,
+                        Height = height
+                    };
                     _images.Add(step, newPlan);
                 }
             }
-            catch (Exception EX_NAME)
+            catch (Exception e)
             {
-                Console.WriteLine(EX_NAME);
+                Logger.Error(e);
             }
             return newFile;
         }
 
-        public int Height { get; set; }
-
-        public int Width { get; set; }
-
-        public string ZoomOut(int step)
+        public string GetStartImage()
         {
-            return null;
+            return string.Concat(Path.DirectorySeparatorChar, "Files", Path.DirectorySeparatorChar, "Temp",
+                Path.DirectorySeparatorChar, Path.GetFileName(_sourceFile));
+
         }
+
+        private int DeltaX { get; }
+
+        private int DeltaY { get; }
     }
 }

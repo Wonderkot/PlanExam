@@ -14,11 +14,37 @@ namespace PlanExam.Controllers
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static IScaler _scaler;
+        private static int _clientWidth;
 
         // GET: Home
         public ActionResult Index()
         {
+            //очистка директории с картинками
+            var folder = Server.MapPath("~/Files/");
+            try
+            {
+                CleanDirecory(folder);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
             return View();
+        }
+
+        private static void CleanDirecory(string folder)
+        {
+            DirectoryInfo di = new DirectoryInfo(folder);
+            DirectoryInfo[] diA = di.GetDirectories();
+            FileInfo[] fi = di.GetFiles();
+            foreach (FileInfo f in fi)
+            {
+                f.Delete();
+            }
+            foreach (DirectoryInfo df in diA)
+            {
+                CleanDirecory(df.FullName);
+            }
         }
 
         [HttpPost]
@@ -26,8 +52,8 @@ namespace PlanExam.Controllers
         {
             if (upload == null) return View("Index");
             string fileName = Path.GetFileName(upload.FileName);
-            
-            if (!HttpPostedFileBaseExtensions.IsImage(upload))
+
+            if (!HttpPostedFileBaseExtensions.IsImage(upload) || string.IsNullOrEmpty(fileName))
             {
 
                 return View("Index");
@@ -37,7 +63,7 @@ namespace PlanExam.Controllers
             try
             {
                 upload.SaveAs(saveFile);
-                _scaler = new ImageScaler(saveFile);
+                _scaler = new ImageScaler(saveFile, _clientWidth);
             }
             catch (Exception e)
             {
@@ -49,12 +75,17 @@ namespace PlanExam.Controllers
             return View("Exam", plan);
         }
 
-        public string ZoomIn(int step)
+        public string GetScaledImage(int step)
         {
-            if (_scaler != null) return _scaler.ZoomIn(step);
+            if (_scaler != null) return _scaler.GetScaledImage(step);
             return null;
-            //var content = Url.Content(string.Concat("~/Files/", "1.png"));
-            //return content;
+        }
+
+        [HttpPost]
+        public void GetClientScreenSize(int width, int height)
+        {
+            _clientWidth = width;
+            Logger.Info(" Client width : {0}, height  : {1}", _clientWidth, height);
         }
     }
 }
