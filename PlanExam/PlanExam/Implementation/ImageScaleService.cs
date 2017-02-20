@@ -10,13 +10,13 @@ using PlanExam.Models;
 
 namespace PlanExam.Implementation
 {
-    public class ImageScaler : IScaler
+    public class ImageScaleService : IScaleService
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly Dictionary<int, Plan> _images = new Dictionary<int, Plan>();
-        private readonly string _sourceFile;
+        private string _sourceFile;
 
-        public ImageScaler(string file, int clientWidth)
+        public  void Init(string file, int clientWidth)
         {
             Image image = Image.FromFile(file);
             var width = image.Width;
@@ -120,8 +120,8 @@ namespace PlanExam.Implementation
 
         }
 
-        private int DeltaX { get; }
+        private int DeltaX { get; set; }
 
-        private int DeltaY { get; }
+        private int DeltaY { get; set; }
     }
 }

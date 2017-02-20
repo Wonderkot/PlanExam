@@ -5,8 +5,6 @@ namespace PlanExam.Utils
 {
     public static class HttpPostedFileBaseExtensions
     {
-        public const int ImageMinimumBytes = 512;
-
         //честно нагуглено на stackoverflow
 
         public static bool IsImage(this HttpPostedFileBase postedFile)

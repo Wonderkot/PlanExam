@@ -2,9 +2,10 @@
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using Castle.Windsor;
 using NLog;
 using PlanExam.Abstract;
-using PlanExam.Implementation;
+using PlanExam.App_Start;
 using PlanExam.Models;
 using PlanExam.Utils;
 
@@ -13,9 +14,15 @@ namespace PlanExam.Controllers
     public class HomeController : Controller
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private static IScaler _scaler;
+        private static IScaleService _scaleService;
+    
         private static int _clientWidth;
 
+        public HomeController(IScaleService scaleService)
+        {
+            _scaleService = scaleService;
+        }
+        
         // GET: Home
         public ActionResult Index()
         {
@@ -53,17 +60,33 @@ namespace PlanExam.Controllers
             if (upload == null) return View("Index");
             string fileName = Path.GetFileName(upload.FileName);
 
+            bool isPdf = false;
+            
+            if (upload.ContentType.ToLower().Equals("application/pdf"))
+            {
+                Logger.Info("Вероятнее всего, загружаемый файл - PDF документ.");
+                isPdf = true;
+                
+            }
+
             if (!HttpPostedFileBaseExtensions.IsImage(upload) || string.IsNullOrEmpty(fileName))
             {
 
                 return View("Index");
             }
+
+            if (isPdf)
+            {
+                IWindsorContainer container = ContainerBootstrapper.Bootstrap().Container;
+                container.Resolve<IScaleService>("PdfScaleService");
+            }
+
             Logger.Info("Выполняется сохранение файла {0} на сервере ...", upload.FileName);
             var saveFile = Path.Combine(Server.MapPath("~/Files/"), fileName);
             try
             {
                 upload.SaveAs(saveFile);
-                _scaler = new ImageScaler(saveFile, _clientWidth);
+                if (_scaleService != null) _scaleService.Init(saveFile, _clientWidth);
             }
             catch (Exception e)
             {
@@ -77,7 +100,7 @@ namespace PlanExam.Controllers
 
         public string GetScaledImage(int step)
         {
-            if (_scaler != null) return _scaler.GetScaledImage(step);
+            if (_scaleService != null) return _scaleService.GetScaledImage(step);
             return null;
         }
 
