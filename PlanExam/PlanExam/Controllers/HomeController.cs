@@ -62,7 +62,6 @@ namespace PlanExam.Controllers
 
             if (!HttpPostedFileBaseExtensions.IsImage(upload) || string.IsNullOrEmpty(fileName))
             {
-
                 return View("Index");
             }
 

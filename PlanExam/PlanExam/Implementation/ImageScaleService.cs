@@ -45,11 +45,13 @@ namespace PlanExam.Implementation
                 width -= DeltaX;
                 height -= DeltaY;
                 Logger.Info("Исходный файл был преобразован для отображения по ширине экрана клиента.");
-                Plan temp = ImageGenerator.GeneratePicPlan(file, width, height, "original");
+                Plan temp = ImageGenerator.GeneratePicPlan(file, width, height, "original", true);
                 if (temp != null)
                 {
-                    _sourceFile = temp.Picture;
-                    _images.Add(0, temp);
+                    if (!_images.ContainsKey(0))
+                    {
+                        _images.Add(0, temp);
+                    }
                 }
             }
             else
@@ -63,7 +65,7 @@ namespace PlanExam.Implementation
                     Height = height
                 };
 
-                _images.Add(0, plan);
+                if (!_images.ContainsKey(0)) _images.Add(0, plan);
             }
             try
             {
@@ -92,7 +94,7 @@ namespace PlanExam.Implementation
 
             try
             {
-                Plan plan = ImageGenerator.GeneratePicPlan(_sourceFile, width, height, step.ToString());
+                Plan plan = ImageGenerator.GeneratePicPlan(_sourceFile, width, height, step.ToString(), false);
                 if (plan != null)
                 {
                     _images.Add(step, plan);
@@ -108,7 +110,13 @@ namespace PlanExam.Implementation
 
         public string GetStartImage()
         {
-            var startImage = string.Concat(Path.DirectorySeparatorChar, Path.GetFileName(_sourceFile));
+            string startImage = _sourceFile;
+            if (_images == null) return startImage;
+            if (_images.ContainsKey(0))
+            {
+                startImage = Path.GetFileName(_images[0].Picture);
+                _sourceFile = _images[0].FullPath;
+            }
             return startImage;
         }
 

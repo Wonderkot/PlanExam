@@ -15,5 +15,7 @@ namespace PlanExam.Models
         public int Width { get; set; }
         public int Height { get; set; }
         public string Picture { get; set; }
+
+        public string FullPath { get; set; }
     }
 }
