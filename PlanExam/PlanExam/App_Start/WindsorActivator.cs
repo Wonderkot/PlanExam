@@ -1,8 +1,8 @@
-using System;
+using PlanExam.App_Start;
 using WebActivatorEx;
 
-[assembly: PreApplicationStartMethod(typeof(PlanExam.App_Start.WindsorActivator), "PreStart")]
-[assembly: ApplicationShutdownMethodAttribute(typeof(PlanExam.App_Start.WindsorActivator), "Shutdown")]
+[assembly: PreApplicationStartMethod(typeof(WindsorActivator), "PreStart")]
+[assembly: ApplicationShutdownMethod(typeof(WindsorActivator), "Shutdown")]
 
 namespace PlanExam.App_Start
 {

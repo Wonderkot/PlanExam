@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Pdf;
 using Aspose.Pdf.Devices;
 using NLog;
 using PlanExam.Abstract;
-using PlanExam.Models;
-using PlanExam.Utils;
-using Image = System.Drawing.Image;
 
 namespace PlanExam.Implementation
 {
     public class PdfScaleService : IScaleService
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Dictionary<int, Plan> _images;
-        private string _sourceFile;
+        private readonly IImageProcessor _imageProcessor;
 
         public PdfScaleService()
         {
-            _images = new Dictionary<int, Plan>();
+            _imageProcessor = new ImageProcessor();
         }
 
         public void Init(string file, int clientWidth)
@@ -27,7 +22,7 @@ namespace PlanExam.Implementation
             Logger.Info("**** Начинается обработка файла {0} ****", file);
             string directory = Path.GetDirectoryName(file);
 
-            var newFile = Path.Combine(directory, "Temp", string.Concat(Path.GetFileNameWithoutExtension(file), ".png"));
+            var newFile = Path.Combine(directory, string.Concat(Path.GetFileNameWithoutExtension(file), ".png"));
             Logger.Info("Будет создан файл {0}", newFile);
             try
             {
@@ -46,32 +41,26 @@ namespace PlanExam.Implementation
                     // Close stream
                     imageStream.Close();
                 }
-                _sourceFile = newFile;
+                _imageProcessor.Init(newFile, clientWidth);
 
             }
             catch (Exception e)
             {
                 Logger.Error(e);
             }
-            //полученный файл конвертируем в картинку
+            
+
             Logger.Info("**** Обработка файла {0} завершена****", file);
         }
 
         public string GetScaledImage(int step)
         {
-            return _sourceFile;
+            return _imageProcessor.GetScaledImage(step);
         }
 
         public string GetStartImage()
         {
-            string startImage = _sourceFile;
-            if (_images == null) return startImage;
-            if (_images.ContainsKey(0))
-            {
-                startImage = Path.GetFileName(_images[0].Picture);
-                _sourceFile = _images[0].FullPath;
-            }
-            return startImage;
+            return _imageProcessor.GetStartImage();
         }
     }
 }

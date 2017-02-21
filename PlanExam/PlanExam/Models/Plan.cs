@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace PlanExam.Models
+﻿namespace PlanExam.Models
 {
     public class Plan
     {

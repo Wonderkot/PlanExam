@@ -17,12 +17,7 @@ namespace PlanExam.Controllers
         private static IScaleService _scaleService;
 
         private static int _clientWidth;
-        
-        public HomeController(IScaleService scaleService)
-        {
-            //По умолчанию происходит обработка изображений
-            _scaleService = scaleService;
-        }
+        private readonly IWindsorContainer _container = ContainerBootstrapper.Bootstrap().Container;
 
         // GET: Home
         public ActionResult Index()
@@ -68,8 +63,11 @@ namespace PlanExam.Controllers
             if (isPdf)
             {
                 //если есть подтверждение, что работаем с пдф, то перенаправляем действие на соответствующий сервис
-                IWindsorContainer container = ContainerBootstrapper.Bootstrap().Container;
-                _scaleService = container.Resolve<IScaleService>("PdfScaleService");
+                _scaleService = _container.Resolve<IScaleService>("PdfScaleService");
+            }
+            else
+            {
+                _scaleService = _container.Resolve<IScaleService>("ImageScaleService");
             }
 
             Logger.Info("Выполняется сохранение файла {0} на сервере ...", upload.FileName);

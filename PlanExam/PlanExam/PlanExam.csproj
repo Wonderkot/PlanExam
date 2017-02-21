@@ -167,6 +167,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IImageProcessor.cs" />
     <Compile Include="Abstract\IScaleService.cs" />
     <Compile Include="App_Start\ContainerBootstrapper.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Implementation\ImageProcessor.cs" />
     <Compile Include="Implementation\ImageScaleService.cs" />
     <Compile Include="Implementation\PdfScaleService.cs" />
     <Compile Include="Installers\ControllersInstaller.cs" />

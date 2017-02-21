@@ -4,11 +4,10 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using PlanExam.Abstract;
 using PlanExam.Implementation;
+using PlanExam.Plumbing;
 
 namespace PlanExam.Installers
 {
-    using Plumbing;
-
     public class ControllersInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
@@ -23,7 +22,7 @@ namespace PlanExam.Installers
             container.Register(Component.For<IScaleService>().ImplementedBy<ImageScaleService>().Named("ImageScaleService"));
             container.Register(Component.For<IScaleService>().ImplementedBy<PdfScaleService>().Named("PdfScaleService"));
 
-            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
+            //ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
         }
     }
 }
