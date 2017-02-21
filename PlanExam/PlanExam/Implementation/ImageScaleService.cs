@@ -80,6 +80,8 @@ namespace PlanExam.Implementation
 
         public string GetScaledImage(int step)
         {
+            //TODO надо отловить событие вверх-вниз и перекинуть на буль. Тут хранить 2 счетчика, их же использовать как ключи словаря
+
             if (_images.ContainsKey(step))
             {
                 return _images[step].Picture;
