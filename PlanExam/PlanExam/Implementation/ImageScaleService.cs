@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using ImageResizer;
 using NLog;
 using PlanExam.Abstract;
 using PlanExam.Models;
+using PlanExam.Utils;
+using Image = System.Drawing.Image;
 
 namespace PlanExam.Implementation
 {
     public class ImageScaleService : IScaleService
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Dictionary<int, Plan> _images = new Dictionary<int, Plan>();
+        private readonly Dictionary<int, Plan> _images;
         private string _sourceFile;
 
-        public  void Init(string file, int clientWidth)
+        public ImageScaleService()
         {
+            _images = new Dictionary<int, Plan>();
+        }
+
+        public void Init(string file, int clientWidth)
+        {
+            Logger.Info("**** Начинается обработка файла {0} ****", file);
             Image image = Image.FromFile(file);
             var width = image.Width;
             var height = image.Height;
@@ -25,7 +31,7 @@ namespace PlanExam.Implementation
             //возьмем фиксированный шаг в 5%
             DeltaX = (int)(width * 0.05);
             DeltaY = (int)(height * 0.05);
-            Logger.Info("**** Изображение будет меняться на {0} по оси X и на {1} по оси Y. ****", DeltaX, DeltaY);
+            Logger.Info("Изображение будет меняться на {0} по оси X и на {1} по оси Y. ", DeltaX, DeltaY);
 
             //сконвертируем изображение под ширину экрана если нужно
             if (width < clientWidth)
@@ -38,23 +44,26 @@ namespace PlanExam.Implementation
                 //обычно забирает немного больше, поэтому отнимем обратно
                 width -= DeltaX;
                 height -= DeltaY;
-
-                ResizeSettings resizeSettings = new ResizeSettings(width, height, FitMode.Stretch,
-                    Path.GetExtension(file))
-                { Scale = ScaleMode.Both };
-
-                string directory = Path.GetDirectoryName(file);
-
-                var newFile = Path.Combine(directory, "Temp", Path.GetFileName(file));
                 Logger.Info("Исходный файл был преобразован для отображения по ширине экрана клиента.");
-                _sourceFile = newFile;
-                ImageBuilder.Current.Build(file, newFile, resizeSettings);
+                Plan temp = ImageGenerator.GeneratePicPlan(file, width, height, "original");
+                if (temp != null)
+                {
+                    _sourceFile = temp.Picture;
+                    _images.Add(0, temp);
+                }
             }
             else
             {
                 string directory = Path.GetDirectoryName(file);
                 _sourceFile = Path.Combine(directory, "Temp", Path.GetFileName(file));
                 File.Copy(file, _sourceFile);
+                Plan plan = new Plan(_sourceFile)
+                {
+                    Width = width,
+                    Height = height
+                };
+
+                _images.Add(0, plan);
             }
             try
             {
@@ -64,13 +73,7 @@ namespace PlanExam.Implementation
             {
                 Logger.Error(e);
             }
-            Plan plan = new Plan(_sourceFile)
-            {
-                Width = width,
-                Height = height
-            };
-
-            _images.Add(0, plan);
+            Logger.Info("**** Обработка файла {0} завершена****", file);
         }
 
         public string GetScaledImage(int step)
@@ -83,27 +86,17 @@ namespace PlanExam.Implementation
 
             //в зависимости от направления отдаём нужную картинку
             var container = step > 0 ? temp.First().Value : temp.Last().Value;
-
-            string directory = Path.GetDirectoryName(_sourceFile);
-            var newFile = string.Concat(directory, Path.DirectorySeparatorChar, Path.GetFileNameWithoutExtension(_sourceFile), step.ToString(), Path.GetExtension(_sourceFile));
-
+            string newFile = null;
             var width = step > 0 ? container.Width + DeltaX : container.Width - DeltaX;
             var height = step > 0 ? container.Height + DeltaY : container.Height - DeltaY;
 
             try
             {
-                ResizeSettings resizeSettings = new ResizeSettings(width, height, FitMode.Stretch, Path.GetExtension(_sourceFile));
-                resizeSettings.Scale = ScaleMode.Both;
-                ImageBuilder.Current.Build(_sourceFile, newFile, resizeSettings);
-                if (File.Exists(newFile))
+                Plan plan = ImageGenerator.GeneratePicPlan(_sourceFile, width, height, step.ToString());
+                if (plan != null)
                 {
-                    newFile = string.Concat(Path.DirectorySeparatorChar, "Files", Path.DirectorySeparatorChar, "Temp", Path.DirectorySeparatorChar, Path.GetFileName(newFile));
-                    Plan newPlan = new Plan(newFile)
-                    {
-                        Width = width,
-                        Height = height
-                    };
-                    _images.Add(step, newPlan);
+                    _images.Add(step, plan);
+                    newFile = plan.Picture;
                 }
             }
             catch (Exception e)
@@ -115,9 +108,8 @@ namespace PlanExam.Implementation
 
         public string GetStartImage()
         {
-            return string.Concat(Path.DirectorySeparatorChar, "Files", Path.DirectorySeparatorChar, "Temp",
-                Path.DirectorySeparatorChar, Path.GetFileName(_sourceFile));
-
+            var startImage = string.Concat(Path.DirectorySeparatorChar, Path.GetFileName(_sourceFile));
+            return startImage;
         }
 
         private int DeltaX { get; set; }

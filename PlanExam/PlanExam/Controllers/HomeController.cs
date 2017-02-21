@@ -15,14 +15,15 @@ namespace PlanExam.Controllers
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static IScaleService _scaleService;
-    
-        private static int _clientWidth;
 
+        private static int _clientWidth;
+        
         public HomeController(IScaleService scaleService)
         {
+            //По умолчанию происходит обработка изображений
             _scaleService = scaleService;
         }
-        
+
         // GET: Home
         public ActionResult Index()
         {
@@ -30,7 +31,7 @@ namespace PlanExam.Controllers
             var folder = Server.MapPath("~/Files/");
             try
             {
-                CleanDirecory(folder);
+                CleanUtil.CleanDirecory(folder);
             }
             catch (Exception e)
             {
@@ -39,21 +40,11 @@ namespace PlanExam.Controllers
             return View();
         }
 
-        private static void CleanDirecory(string folder)
-        {
-            DirectoryInfo di = new DirectoryInfo(folder);
-            DirectoryInfo[] diA = di.GetDirectories();
-            FileInfo[] fi = di.GetFiles();
-            foreach (FileInfo f in fi)
-            {
-                f.Delete();
-            }
-            foreach (DirectoryInfo df in diA)
-            {
-                CleanDirecory(df.FullName);
-            }
-        }
-
+        /// <summary>
+        /// Загрузка файла
+        /// </summary>
+        /// <param name="upload"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase upload)
         {
@@ -61,12 +52,12 @@ namespace PlanExam.Controllers
             string fileName = Path.GetFileName(upload.FileName);
 
             bool isPdf = false;
-            
+
             if (upload.ContentType.ToLower().Equals("application/pdf"))
             {
                 Logger.Info("Вероятнее всего, загружаемый файл - PDF документ.");
                 isPdf = true;
-                
+
             }
 
             if (!HttpPostedFileBaseExtensions.IsImage(upload) || string.IsNullOrEmpty(fileName))
@@ -77,8 +68,9 @@ namespace PlanExam.Controllers
 
             if (isPdf)
             {
+                //если есть подтверждение, что работаем с пдф, то перенаправляем действие на соответствующий сервис
                 IWindsorContainer container = ContainerBootstrapper.Bootstrap().Container;
-                container.Resolve<IScaleService>("PdfScaleService");
+                _scaleService = container.Resolve<IScaleService>("PdfScaleService");
             }
 
             Logger.Info("Выполняется сохранение файла {0} на сервере ...", upload.FileName);
@@ -94,16 +86,28 @@ namespace PlanExam.Controllers
                 return View("Index");
             }
             Logger.Info("Файл успешно сохранен.");
+            if (_scaleService != null) fileName = _scaleService.GetStartImage();
             Plan plan = new Plan(fileName);
+            
             return View("Exam", plan);
         }
 
+        /// <summary>
+        /// Возврат отмасштабированного изображения
+        /// </summary>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public string GetScaledImage(int step)
         {
             if (_scaleService != null) return _scaleService.GetScaledImage(step);
             return null;
         }
 
+        /// <summary>
+        /// Получение размеров экрана пользователя
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         [HttpPost]
         public void GetClientScreenSize(int width, int height)
         {

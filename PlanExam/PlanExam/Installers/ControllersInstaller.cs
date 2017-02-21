@@ -20,8 +20,8 @@ namespace PlanExam.Installers
                     If(c => c.Name.EndsWith("Controller")).
                     LifestyleTransient());
 
-            container.Register(Component.For<IScaleService>().ImplementedBy<ImageScaleService>().LifestylePerWebRequest().Named("ImageScaleService"));
-            container.Register(Component.For<IScaleService>().ImplementedBy<PdfScaleService>().LifestylePerWebRequest().Named("PdfScaleService"));
+            container.Register(Component.For<IScaleService>().ImplementedBy<ImageScaleService>().Named("ImageScaleService"));
+            container.Register(Component.For<IScaleService>().ImplementedBy<PdfScaleService>().Named("PdfScaleService"));
 
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
         }

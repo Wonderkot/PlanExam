@@ -55,7 +55,18 @@ function getClientScreenSize() {
                 Console.log('screen size sended');
             },
             error: function () {
-                alert('Error occured');
+                $.ajax({
+                    url: 'GetClientScreenSize',
+                    type: 'POST',
+                    cache: false,
+                    data: { 'width': width, 'height': height },
+                    success: function () {
+                        Console.log('screen size sended');
+                    },
+                    error: function () {
+                        alert('Error while sending client screen size');
+                    }
+                });
             }
         });
     });
