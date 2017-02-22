@@ -30,15 +30,9 @@ namespace PlanExam.Implementation
                 Document pdfDocument = new Document(file);
                 using (FileStream imageStream = new FileStream(newFile, FileMode.OpenOrCreate))
                 {
-                    // Create Resolution object
-                    Resolution resolution = new Resolution(300);
-                    // Create PNG device with specified attributes (Width, Height, Resolution)
+                    Resolution resolution = new Resolution(100);
                     PngDevice pngDevice = new PngDevice(resolution);
-
-                    // Convert a particular page and save the image to stream
                     pngDevice.Process(pdfDocument.Pages[1], imageStream);
-
-                    // Close stream
                     imageStream.Close();
                 }
                 _imageProcessor.Init(newFile, clientWidth);
@@ -53,9 +47,9 @@ namespace PlanExam.Implementation
             Logger.Info("**** Обработка файла {0} завершена****", file);
         }
 
-        public string GetScaledImage(int step)
+        public string GetScaledImage(bool direction)
         {
-            return _imageProcessor.GetScaledImage(step);
+            return _imageProcessor.GetScaledImage(direction);
         }
 
         public string GetStartImage()

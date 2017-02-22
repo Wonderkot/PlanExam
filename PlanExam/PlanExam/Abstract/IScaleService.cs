@@ -9,13 +9,13 @@ namespace PlanExam.Abstract
         /// <param name="file"></param>
         /// <param name="clientWidth"></param>
         void Init(string file, int clientWidth);
-        
+
         /// <summary>
-        /// Увеличение
+        /// Масштабирование
         /// </summary>
-        /// <param name="step"></param>
+        /// <param name="direction"></param>
         /// <returns></returns>
-        string GetScaledImage(int step);
+        string GetScaledImage(bool direction);
 
         string GetStartImage();
     }
