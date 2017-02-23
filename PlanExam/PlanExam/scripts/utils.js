@@ -21,8 +21,6 @@ function onWheel(e) {
 
     // wheelDelta не дает возможность узнать количество пикселей
     var delta = e.deltaY || e.detail || e.wheelDelta;
-    //var info = document.getElementById('delta');
-    //info.innerHTML = +info.innerHTML + delta;
     var direction = true;
     if (delta > 0) {
         //прокрутка вниз
@@ -35,8 +33,6 @@ function onWheel(e) {
         data: { 'direction': direction },
         success: function (results) {
             $("#pic").attr("src", results);
-            //var img = document.getElementById('img');
-            //img.innerHTML = +img.innerHTML + results;
         },
         error: function () {
             alert('Error occured');
@@ -60,6 +56,7 @@ function getClientScreenSize() {
                 Console.log('screen size sended');
             },
             error: function () {
+                //пару раз были проблемы, поэтому страхуемся
                 $.ajax({
                     url: 'GetClientScreenSize',
                     type: 'POST',

@@ -16,10 +16,7 @@ namespace PlanExam.Implementation
         private readonly Dictionary<int, Plan> _images;
         private string _sourceFile;
 
-        private int _zoomInCount = 1;
-        private int _zoomOutCount = -1;
-
-        private int scaleCount = 0;
+        private int _scaleCount;
 
         public ImageProcessor()
         {
@@ -92,16 +89,16 @@ namespace PlanExam.Implementation
             //true - вверх, false - вниз
             if (direction)
             {
-                scaleCount++;
+                _scaleCount++;
             }
             else
             {
-                scaleCount--;
+                _scaleCount--;
             }
 
-            if (_images.ContainsKey(scaleCount))
+            if (_images.ContainsKey(_scaleCount))
             {
-                return _images[scaleCount].Picture;
+                return _images[_scaleCount].Picture;
             }
 
             IOrderedEnumerable<KeyValuePair<int, Plan>> temp = _images.OrderByDescending(x => x.Key);
@@ -114,10 +111,10 @@ namespace PlanExam.Implementation
 
             try
             {
-                Plan plan = ImageGenerator.GeneratePicPlan(_sourceFile, width, height, scaleCount.ToString(), false);
+                Plan plan = ImageGenerator.GeneratePicPlan(_sourceFile, width, height, _scaleCount.ToString(), false);
                 if (plan != null)
                 {
-                    if (!_images.ContainsKey(scaleCount)) _images.Add(scaleCount, plan);
+                    if (!_images.ContainsKey(_scaleCount)) _images.Add(_scaleCount, plan);
                     newFile = plan.Picture;
                 }
             }

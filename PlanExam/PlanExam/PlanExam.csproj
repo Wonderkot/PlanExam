@@ -213,6 +213,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\logs\" />
+    <Folder Include="css\" />
     <Folder Include="Files\Temp\" />
   </ItemGroup>
   <PropertyGroup>
