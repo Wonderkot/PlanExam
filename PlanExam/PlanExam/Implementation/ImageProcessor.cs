@@ -16,6 +16,8 @@ namespace PlanExam.Implementation
         private readonly Dictionary<int, Plan> _images;
         private string _sourceFile;
 
+        private int _scaleCount;
+
         public ImageProcessor()
         {
             _images = new Dictionary<int, Plan>();
@@ -82,28 +84,37 @@ namespace PlanExam.Implementation
             Logger.Info("**** Обработка файла {0} завершена****", file);
         }
 
-        public string GetScaledImage(int step)
+        public string GetScaledImage(bool direction)
         {
-            //TODO надо отловить событие вверх-вниз и перекинуть на буль. Тут хранить 2 счетчика, их же использовать как ключи словаря
-
-            if (_images.ContainsKey(step))
+            //true - вверх, false - вниз
+            if (direction)
             {
-                return _images[step].Picture;
+                _scaleCount++;
             }
+            else
+            {
+                _scaleCount--;
+            }
+
+            if (_images.ContainsKey(_scaleCount))
+            {
+                return _images[_scaleCount].Picture;
+            }
+
             IOrderedEnumerable<KeyValuePair<int, Plan>> temp = _images.OrderByDescending(x => x.Key);
 
             //в зависимости от направления отдаём нужную картинку
-            var container = step > 0 ? temp.First().Value : temp.Last().Value;
+            var container = direction ? temp.First().Value : temp.Last().Value;
             string newFile = null;
-            var width = step > 0 ? container.Width + DeltaX : container.Width - DeltaX;
-            var height = step > 0 ? container.Height + DeltaY : container.Height - DeltaY;
+            var width = direction ? container.Width + DeltaX : container.Width - DeltaX;
+            var height = direction ? container.Height + DeltaY : container.Height - DeltaY;
 
             try
             {
-                Plan plan = ImageGenerator.GeneratePicPlan(_sourceFile, width, height, step.ToString(), false);
+                Plan plan = ImageGenerator.GeneratePicPlan(_sourceFile, width, height, _scaleCount.ToString(), false);
                 if (plan != null)
                 {
-                    _images.Add(step, plan);
+                    if (!_images.ContainsKey(_scaleCount)) _images.Add(_scaleCount, plan);
                     newFile = plan.Picture;
                 }
             }

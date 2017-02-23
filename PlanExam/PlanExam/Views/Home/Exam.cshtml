@@ -9,17 +9,14 @@
 <head>
     <meta charset="utf-8" />
     <title>Рецензирование</title>
-    @*<link href="/Content/Site.css" rel="stylesheet" type="text/css" />*@
-    <script src="/Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="/Scripts/jquery-3.1.1.min.js"></script>
 </head>
 <body>
-    <div hidden>
-        Прокрутка: <span id="delta">0</span>
-    </div>
-
     <div id="container">
         <img id="pic" src="@Url.Content(string.Concat("~/Files/Temp/", @Model.Picture))" alt="Image" />
     </div>
     <script src="/Scripts/utils.js" type="text/javascript"></script>
+
 </body>
 </html>

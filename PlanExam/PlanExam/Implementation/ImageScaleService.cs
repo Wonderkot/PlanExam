@@ -17,9 +17,9 @@ namespace PlanExam.Implementation
             _imageProcessor.Init(file, clientWidth);
         }
 
-        public string GetScaledImage(int step)
+        public string GetScaledImage(bool direction)
         {
-            return _imageProcessor.GetScaledImage(step);
+            return _imageProcessor.GetScaledImage(direction);
         }
 
         public string GetStartImage()

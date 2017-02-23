@@ -92,11 +92,11 @@ namespace PlanExam.Controllers
         /// <summary>
         /// Возврат отмасштабированного изображения
         /// </summary>
-        /// <param name="step"></param>
+        /// <param name="direction"></param>
         /// <returns></returns>
-        public string GetScaledImage(int step)
+        public string GetScaledImage(bool direction)
         {
-            if (_scaleService != null) return _scaleService.GetScaledImage(step);
+            if (_scaleService != null) return _scaleService.GetScaledImage(direction);
             return null;
         }
 

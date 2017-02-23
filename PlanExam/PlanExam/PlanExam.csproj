@@ -160,7 +160,9 @@
     <Content Include="scripts\jquery-3.1.1.min.js" />
     <Content Include="scripts\jquery-3.1.1.slim.js" />
     <Content Include="scripts\jquery-3.1.1.slim.min.js" />
-    <Content Include="scripts\utils.js" />
+    <Content Include="scripts\utils.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -211,6 +213,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\logs\" />
+    <Folder Include="css\" />
     <Folder Include="Files\Temp\" />
   </ItemGroup>
   <PropertyGroup>
