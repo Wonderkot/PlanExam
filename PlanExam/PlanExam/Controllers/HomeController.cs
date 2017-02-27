@@ -111,5 +111,11 @@ namespace PlanExam.Controllers
             _clientWidth = width;
             Logger.Info(" Client width : {0}, height  : {1}", _clientWidth, height);
         }
+
+        [HttpPost]
+        public void NoteInteract(object json)
+        {
+            Logger.Debug(json.ToString());
+        }
     }
 }
