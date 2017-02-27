@@ -1,5 +1,7 @@
 ﻿var elem = document.getElementById('container');
 
+var notes = [];
+
 if (elem.addEventListener) {
     if ('onwheel' in document) {
         // IE9+, FF17+
@@ -72,4 +74,44 @@ function getClientScreenSize() {
             }
         });
     });
+}
+
+function draw() {
+    $('#pic').imgAreaSelect({ enable: true, onSelectChange: showaddnote, x1: 120, y1: 90, x2: 280, y2: 210 });
+    return false;
+}
+
+function showaddnote(img, area) {
+    var imgOffset = $(img).offset();
+    var formLeft = parseInt(imgOffset.left) + parseInt(area.x1);
+    var formTop = parseInt(imgOffset.top) + parseInt(area.y1) + parseInt(area.height) + 5;
+
+    $('#noteform').css({ left: formLeft + 'px', top: formTop + 'px' });
+
+    $('#noteform').show();
+
+    $('#noteform').css("z-index", 10000);
+    $('#NoteX1').val(area.x1);
+    $('#NoteY1').val(area.y1);
+    $('#NoteHeight').val(area.height);
+    $('#NoteWidth').val(area.width);
+}
+
+function saveNote() {
+    var noteX1 = $('#NoteX1').val();
+    var noteY1 = $('#NoteY1').val();
+    var noteHeight = $('#NoteHeight').val();
+    var noteWidth = $('#NoteWidth').val();
+    var noteNote = $('#NoteNote').val();
+    var id = notes.length + 1;
+
+    notes.push({ "x1": noteX1, "y1": noteY1, "height": noteHeight, "width": noteWidth, "note": noteNote, "id": id });
+
+    //$('#pic').imgNotes({ notes: notes, isMobile: false });
+    //cancel();
+}
+
+function cancel() {
+    $('#pic').imgAreaSelect({ hide: true, disable: true });
+    $('#noteform').hide();
 }

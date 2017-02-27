@@ -9,12 +9,31 @@
 <head>
     <meta charset="utf-8" />
     <title>Рецензирование</title>
-
+    <link rel="stylesheet" type="text/css" href="/css/imgnotes.css" />
     <script type="text/javascript" src="/Scripts/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery-migrate-1.4.1.min.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.imgareaselect-0.4.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.imgnotes.js"></script>
 </head>
 <body>
-    <div id="container">
+    <div id="container" onclick="draw()">
         <img id="pic" src="@Url.Content(string.Concat("~/Files/Temp/", @Model.Picture))" alt="Image" />
+    </div>
+    <div id="noteform">
+        <div id="NoteAddForm">
+            <fieldset>
+                <legend>Добавить комментарий</legend>
+                <input name="data[Note][x1]" type="hidden" value="" id="NoteX1" />
+                <input name="data[Note][y1]" type="hidden" value="" id="NoteY1" />
+                <input name="data[Note][height]" type="hidden" value="" id="NoteHeight" />
+                <input name="data[Note][width]" type="hidden" value="" id="NoteWidth" />
+                <textarea name="data[Note][note]" id="NoteNote"></textarea>
+            </fieldset>
+            <div class="submit">
+                <button onclick="saveNote()" value="Сохранить"></button>
+                <button onclick="cancel()" value="Отмена"></button>
+            </div>
+        </div>
     </div>
     <script src="/Scripts/utils.js" type="text/javascript"></script>
 

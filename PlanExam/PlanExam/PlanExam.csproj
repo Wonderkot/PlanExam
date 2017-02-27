@@ -151,6 +151,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\imgnotes.css" />
+    <Content Include="css\notes.png" />
+    <Content Include="css\spacer.gif" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
@@ -160,6 +163,9 @@
     <Content Include="scripts\jquery-3.1.1.min.js" />
     <Content Include="scripts\jquery-3.1.1.slim.js" />
     <Content Include="scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="scripts\jquery-migrate-1.4.1.min.js" />
+    <Content Include="scripts\jquery.imgareaselect-0.4.js" />
+    <Content Include="scripts\jquery.imgnotes.js" />
     <Content Include="scripts\utils.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -213,7 +219,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\logs\" />
-    <Folder Include="css\" />
     <Folder Include="Files\Temp\" />
   </ItemGroup>
   <PropertyGroup>
