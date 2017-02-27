@@ -1,4 +1,6 @@
 ﻿
+using PlanExam.Models;
+
 namespace PlanExam.Abstract
 {
     public interface IScaleService
@@ -17,6 +19,6 @@ namespace PlanExam.Abstract
         /// <returns></returns>
         string GetScaledImage(bool direction);
 
-        string GetStartImage();
+        Plan GetStartImage();
     }
 }

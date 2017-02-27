@@ -81,6 +81,7 @@ namespace PlanExam.Implementation
             {
                 Logger.Error(e);
             }
+            _sourceFile = _images[0].FullPath;
             Logger.Info("**** Обработка файла {0} завершена****", file);
         }
 
@@ -125,20 +126,25 @@ namespace PlanExam.Implementation
             return newFile;
         }
 
-        public string GetStartImage()
+        public Plan GetStartImage()
         {
             //нам нужно знать путь до оригинального файла, чтобы конвертировать всегда только его и минимизировать потери качества
             //также нам нужен относительный путь до файла, но разово
-            string startImage = _sourceFile;
-            if (_images == null) return startImage;
-            if (!_images.ContainsKey(0)) return startImage;
-            startImage = Path.GetFileName(_images[0].Picture);
+            //Plan startImage = new Plan(_sourceFile);
+            //Image image = Image.FromFile(_sourceFile);
+            //var width = image.Width;
+            //var height = image.Height;
+            //image.Dispose();
+            //startImage.Width = width;
+            //startImage.Height = height;
+            //if (_images == null) return startImage;
+            //if (!_images.ContainsKey(0)) return startImage;
             var sourceFile = _images[0].FullPath;
             if (sourceFile != null)
             {
                 _sourceFile = sourceFile;
             }
-            return startImage;
+            return _images[0];
         }
     }
 }

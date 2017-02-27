@@ -13,72 +13,82 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <link rel="stylesheet" type="text/css" href="/css/lteIE8.css" />
     <script type="text/javascript" src="/Scripts/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="/Scripts/jquery-ui-1.12.1.js"></script>
-    <script type="text/javascript" src="/Scripts/jquery-notes_1.0.8.js"></script>
+    @*<script type="text/javascript" src="/Scripts/jquery-ui-1.12.1.js"></script>
+        <script type="text/javascript" src="/Scripts/jquery-notes_1.0.8.js"></script>*@
 
-    <script type="text/javascript">
-        $(function () {
+    @*<script type="text/javascript">
+            $(function () {
 
-            $('.jquery-note').jQueryNotes({
-                aspectRatio: false,
+                $('.jquery-note').jQueryNotes({
+                    aspectRatio: false,
 
-                allowAdd: true,
+                    allowAdd: true,
 
-                allowEdit: true,
+                    allowEdit: true,
 
-                allowDelete: true,
+                    allowDelete: true,
 
-                allowHide: false,
+                    allowHide: false,
 
-                allowReload: true,
+                    allowReload: true,
 
-                allowLink: false,
+                    allowLink: false,
 
-                allowAuthor: false,
+                    allowAuthor: false,
 
-                dateFormat: 'Y/D/M H:I',
+                    dateFormat: 'Y/D/M H:I',
 
-                hideNotes: false,
+                    hideNotes: false,
 
-                loadNotes: true,
+                    loadNotes: true,
 
-                helper: '',
+                    helper: '',
 
-                maxNotes: null,
+                    maxNotes: null,
 
-                operator: "/jquery-notes_php/notes.php"
+                    operator: "/jquery-notes_php/notes.php"
+                });
+
             });
+        </script>
 
-        });
-    </script>
-
-    <style type="text/css">
-        .helper-class .notes .note .border {
-            border: 1px solid #0055ff;
-            outline: none;
-        }
-
-            .helper-class .notes .note .border .bg {
-                background: #0055ff;
+        <style type="text/css">
+            .helper-class .notes .note .border {
+                border: 1px solid #0055ff;
+                outline: none;
             }
 
-        .helper-class .notes .text {
-            color: #000;
-            background: #fff;
-            -moz-border-radius: 0;
-            -webkit-border-radius: 0;
-            border-radius: 0;
-        }
+                .helper-class .notes .note .border .bg {
+                    background: #0055ff;
+                }
 
-            .helper-class .notes .text span {
+            .helper-class .notes .text {
                 color: #000;
+                background: #fff;
+                -moz-border-radius: 0;
+                -webkit-border-radius: 0;
+                border-radius: 0;
             }
-    </style>
+
+                .helper-class .notes .text span {
+                    color: #000;
+                }
+        </style>*@
 
 </head>
 <body>
-    <div id="container">
-        <img id="pic" src="@Url.Content(string.Concat("~/Files/Temp/", @Model.Picture))" alt="Image" class="jquery-note"/>
+    <div id="container" onclick="draw()">
+        @*<img id="pic" src="@Url.Content(string.Concat("~/Files/Temp/", @Model.Picture))" alt="Image"/>*@
+        <canvas id="myCanvas" width="@Model.Width" height="@Model.Height"></canvas>
+        <script>
+            var canvas = document.getElementById("myCanvas"),
+              ctx = canvas.getContext('2d'), // Контекст
+              pic = new Image();              // "Создаём" изображение
+            pic.src = "@Url.Content("~/" +@Model.Picture)";
+            pic.onload = function () {    // Событие onLoad, ждём момента пока загрузится изображение
+                ctx.drawImage(pic, 0, 0, @Model.Width, @Model.Height);  // Рисуем изображение от точки с координатами 0, 0
+            }
+        </script>
     </div>
     <script src="/Scripts/utils.js" type="text/javascript"></script>
 

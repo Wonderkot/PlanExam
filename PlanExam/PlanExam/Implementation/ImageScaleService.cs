@@ -1,4 +1,5 @@
 ﻿using PlanExam.Abstract;
+using PlanExam.Models;
 
 namespace PlanExam.Implementation
 {
@@ -22,7 +23,7 @@ namespace PlanExam.Implementation
             return _imageProcessor.GetScaledImage(direction);
         }
 
-        public string GetStartImage()
+        public Plan GetStartImage()
         {
             return _imageProcessor.GetStartImage();
         }

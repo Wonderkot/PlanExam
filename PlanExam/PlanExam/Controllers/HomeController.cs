@@ -83,9 +83,16 @@ namespace PlanExam.Controllers
                 return View("Index");
             }
             Logger.Info("Файл успешно сохранен.");
-            if (_scaleService != null) fileName = _scaleService.GetStartImage();
-            Plan plan = new Plan(fileName);
-            
+            Plan plan;
+            if (_scaleService != null)
+            {
+                plan = _scaleService.GetStartImage();
+            }
+            else
+            {
+                plan = new Plan(fileName);
+            }
+
             return View("Exam", plan);
         }
 
