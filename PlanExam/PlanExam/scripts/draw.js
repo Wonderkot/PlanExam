@@ -17,18 +17,17 @@ function init() {
     });
 }
 
-//$('.map').maphilight({
-//    alwaysOn: true,
-//    shadow: true,
-//    strokeColor: 'red',
-//    strokeOpacity: 1,
-//    strokeWidth: 1,
-//    fade: false
-//});
+$('.map').maphilight({
+    alwaysOn: true,
+    shadow: true
+});
 
 
 
 function WriteCoord(c) {
+    if (c.x === c.x2) {
+        return;
+    }
     $('#x').val(c.x);
     $('#y').val(c.y);
     $('#x2').val(c.x2);
@@ -38,11 +37,16 @@ function WriteCoord(c) {
 function AddArea() {
     var element = document.createElement("area");
     element.id = "poly";
-    element.shape = "poly";
+    element.shape = "rect";
     element.coords = $('#x').val() + "," + $('#y').val() + "," + $('#x2').val() + "," + $('#y2').val();
     element.alt = "text";
     element.title = "text";
     element.href = "#";
+
+    var att = document.createAttribute("class");
+    att.value = "{fillColor:'00ff00'}";
+    element.setAttributeNode(att);
+
     mapPoly.appendChild(element);
     jcrop.destroy();
 }
