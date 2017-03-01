@@ -32,16 +32,7 @@ function onWheel(e) {
         cache: false,
         data: { 'direction': direction },
         success: function (results) {
-            //$("#pic").attr("src", results);
-            var canvas = document.getElementById("myCanvas"),
-                ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Контекст
-            var pic = new Image();
-            pic.src = results;
-            pic.onload = function () {
-                ctx.drawImage(pic, 0, 0);
-            }
+            $("#pic").attr("src", results);
         },
         error: function () {
             alert('Error occured');
@@ -81,8 +72,4 @@ function getClientScreenSize() {
             }
         });
     });
-}
-
-function draw() {
-
 }

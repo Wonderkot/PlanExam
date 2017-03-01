@@ -192,20 +192,26 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="css\lteIE8.css" />
-    <Content Include="css\style.css" />
+    <Content Include="css\Jcrop.gif" />
+    <Content Include="css\jquery.Jcrop.min.css" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
-    <Content Include="Readme.md" />    
+    <Content Include="Readme.md" />
     <None Include="scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="scripts\draw.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="scripts\jquery-3.1.1.js" />
     <Content Include="scripts\jquery-3.1.1.min.js" />
     <Content Include="scripts\jquery-3.1.1.slim.js" />
     <Content Include="scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="scripts\jquery-migrate-1.4.1.min.js" />
     <Content Include="scripts\jquery-notes_1.0.8.js" />
     <Content Include="scripts\jquery-ui-1.12.1.js" />
     <Content Include="scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="scripts\jquery.Jcrop.js" />
+    <Content Include="scripts\jquery.maphilight.js" />
     <Content Include="scripts\utils.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -259,7 +265,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\logs\" />
-    <Folder Include="css\images\" />
     <Folder Include="Files\Temp\" />
   </ItemGroup>
   <PropertyGroup>
