@@ -192,8 +192,13 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="css\Jcrop.gif" />
-    <Content Include="css\jquery.Jcrop.min.css" />
+    <Content Include="css\border-anim-h.gif" />
+    <Content Include="css\border-anim-v.gif" />
+    <Content Include="css\border-h.gif" />
+    <Content Include="css\border-v.gif" />
+    <Content Include="css\imgareaselect-animated.css" />
+    <Content Include="css\imgareaselect-default.css" />
+    <Content Include="css\imgareaselect-deprecated.css" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
@@ -207,10 +212,7 @@
     <Content Include="scripts\jquery-3.1.1.slim.js" />
     <Content Include="scripts\jquery-3.1.1.slim.min.js" />
     <Content Include="scripts\jquery-migrate-1.4.1.min.js" />
-    <Content Include="scripts\jquery-notes_1.0.8.js" />
-    <Content Include="scripts\jquery-ui-1.12.1.js" />
-    <Content Include="scripts\jquery-ui-1.12.1.min.js" />
-    <Content Include="scripts\jquery.Jcrop.js" />
+    <Content Include="scripts\jquery.imgareaselect.js" />
     <Content Include="scripts\jquery.maphilight.js" />
     <Content Include="scripts\utils.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

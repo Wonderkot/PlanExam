@@ -7,17 +7,17 @@
 <head>
     <meta charset="utf-8" />
     <title>Рецензирование</title>
-    <link rel="stylesheet" type="text/css" href="/css/jquery.Jcrop.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/imgareaselect-default.css" />
     <script type="text/javascript" src="/Scripts/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="/Scripts/jquery-migrate-1.4.1.min.js"></script>
     <script type="text/javascript" src="/Scripts/jquery.maphilight.js"></script>
-    <script type="text/javascript" src="/Scripts/jquery.Jcrop.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.imgareaselect.js"></script>
 </head>
 <body>
 <div id="container" onclick="init()">
     <img id="pic" src="@Url.Content(@Model.Picture)" alt="Image" class="map" usemap="#ImageMapmapAreas"/>
     <map id="ImageMapmapAreas" name="ImageMapmapAreas">
-        <area id="poly" shape="rect" coords="122,191,428,410" alt="text" title="text" href="#">
+        @*<area id="poly" shape="rect" coords="122,191,428,410" alt="text" title="text" href="#">*@
     </map>
 </div>
     <input id="x" hidden/>

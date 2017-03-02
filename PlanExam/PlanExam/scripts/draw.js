@@ -5,16 +5,15 @@ container.addEventListener('mousedown', mouseDown, false);
 container.addEventListener('mouseup', mouseUp, false);
 container.addEventListener('mousemove', mouseMove, false);
 
-var jcrop;
+$(document).ready(function () {
+    $('img#pic').imgAreaSelect({
+        handles: true,
+        onSelectEnd: WriteCoord
+    });
+});
 
 function init() {
-    $('#pic').Jcrop({
-        onChange: WriteCoord,
-        onSelect: WriteCoord,
-        onRelease: AddArea
-    }, function () {
-        jcrop = this;
-    });
+    
 }
 
 $('.map').maphilight({
@@ -24,14 +23,13 @@ $('.map').maphilight({
 
 
 
-function WriteCoord(c) {
-    if (c.x === c.x2) {
-        return;
-    }
-    $('#x').val(c.x);
-    $('#y').val(c.y);
-    $('#x2').val(c.x2);
-    $('#y2').val(c.y2);
+function WriteCoord(img, selection) {
+
+    $('#x').val(selection.x1);
+    $('#y').val(selection.y1);
+    $('#x2').val(selection.x2);
+    $('#y2').val(selection.y2);
+    AddArea();
 }
 
 function AddArea() {
@@ -42,13 +40,7 @@ function AddArea() {
     element.alt = "text";
     element.title = "text";
     element.href = "#";
-
-    var att = document.createAttribute("class");
-    att.value = "{fillColor:'00ff00'}";
-    element.setAttributeNode(att);
-
     mapPoly.appendChild(element);
-    jcrop.destroy();
 }
 
 function mouseDown() {
